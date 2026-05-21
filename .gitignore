@@ -67,6 +67,7 @@ vcpkg_installed/
 # test output & cache
 Testing/
 build
+.claude
 .cache/
 .vscode
 .DS_Store

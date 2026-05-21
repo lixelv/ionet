@@ -314,7 +314,7 @@ struct ed25519_t {
     return *this;
   }
 
-  bool operator==(const ed25519_t &o) { return x == o.x && y == o.y; }
+  bool operator==(const ed25519_t &o) const { return x == o.x && y == o.y; }
 
   ed25519_t operator+(const ed25519_t &o) const {
     k25519_t dxy = D * x * o.x * y * o.y;
