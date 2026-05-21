@@ -1,5 +1,4 @@
 #include "../session.hpp"
-#include <cassert>
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
@@ -85,7 +84,7 @@ void TestCommonPlain() {
 
 void TestEncryptedSessionDirect() {
   int sv[2];
-  assert(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == 0);
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
 
   std::string received;
   uint64_t received_len = 0;
@@ -119,7 +118,7 @@ void TestEncryptedSessionDirect() {
 
 void TestPlainSessionDirect() {
   int sv[2];
-  assert(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == 0);
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
 
   std::string received;
   uint64_t received_len = 0;
@@ -175,7 +174,7 @@ void TestTypes(const char *label, Client &c, Server &s) {
 
 void TestTypesEncrypted() {
   int sv[2];
-  assert(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == 0);
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
 
   EncryptedSession s, c;
   s.fd = sv[1];
@@ -221,7 +220,7 @@ void TestTypesEncrypted() {
 
 void TestTypesPlain() {
   int sv[2];
-  assert(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) == 0);
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
 
   PlainSession s, c;
   s.fd = sv[1];
