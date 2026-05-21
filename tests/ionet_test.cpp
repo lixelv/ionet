@@ -1,4 +1,4 @@
-#include "../connect/struct.hpp"
+#include "ionet/connect/struct.hpp"
 
 #include <array>
 #include <iostream>

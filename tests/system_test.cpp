@@ -1,5 +1,5 @@
-#include "../client.hpp"
-#include "../server.hpp"
+#include "ionet/client.hpp"
+#include "ionet/server.hpp"
 
 #include <arpa/inet.h>
 #include <atomic>

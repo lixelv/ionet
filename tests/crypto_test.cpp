@@ -1,5 +1,5 @@
-#include "../crypto/chacha20.hpp"
-#include "../crypto/crypto.hpp"
+#include "ionet/crypto/chacha20.hpp"
+#include "ionet/crypto/crypto.hpp"
 
 #include <cstring>
 #include <iostream>

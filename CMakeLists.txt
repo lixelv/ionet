@@ -1,13 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 project(ionet LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Threads REQUIRED)
 
 add_library(ionet INTERFACE)
-target_include_directories(ionet INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(ionet INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 target_link_libraries(ionet INTERFACE Threads::Threads)
 
 enable_testing()
