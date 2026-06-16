@@ -45,7 +45,12 @@ struct PlainSession {
 
   ~PlainSession() = default;
 
-  bool handshake_initiator(const SessionHeaders &shi = SessionHeaders{false}) { return true; }
+  void set_fd(int v) { this->fd = v; }
+  int get_fd() const { return this->fd; }
+
+  bool handshake_initiator(const SessionHeaders &shi = SessionHeaders{false}) {
+    return true;
+  }
   bool handshake_responder() { return true; };
 
   template <typename T> bool send(const T &obj) { return send_struct(fd, obj); }
@@ -69,6 +74,9 @@ struct EncryptedSession {
   EncryptedSession &operator=(EncryptedSession &&) = default;
 
   ~EncryptedSession() = default;
+
+  void set_fd(int v) { this->fd = v; }
+  int get_fd() const { return this->fd; }
 
   static uint256_t point_to_key(const ed25519_t &pt) { return pt.x.v; }
 
@@ -169,7 +177,7 @@ struct CommonSession {
   ~CommonSession() = default;
 
   void set_fd(int v) {
-    std::visit([&v](auto &s) { s.fd = v; }, session);
+    std::visit([&v](auto &s) { s.set_fd(v); }, session);
   };
 
   int get_fd() {
@@ -177,7 +185,7 @@ struct CommonSession {
   };
 
   bool handshake_initiator(const SessionHeaders &shi) {
-    int fd = std::visit([](const auto &s) { return s.fd; }, session);
+    int fd = std::visit([](const auto &s) { return s.get_fd(); }, session);
     send(shi);
 
     if (shi.encrypted) {
@@ -191,7 +199,8 @@ struct CommonSession {
   bool handshake_responder() {
     int fd = std::visit([](const auto &s) { return s.fd; }, session);
     SessionHeaders shi;
-    if (!recv(shi)) return false;
+    if (!recv(shi))
+      return false;
 
     if (shi.encrypted) {
       session.emplace<EncryptedSession>(fd);

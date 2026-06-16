@@ -84,7 +84,10 @@ void TestCommonPlain() {
 
 void TestEncryptedSessionDirect() {
   int sv[2];
-  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) {
+    ++g_fail;
+    return;
+  }
 
   std::string received;
   uint64_t received_len = 0;
@@ -92,7 +95,7 @@ void TestEncryptedSessionDirect() {
 
   std::thread server_thread([&] {
     EncryptedSession s;
-    s.fd = sv[1];
+    s.set_fd(sv[1]);
     if (!s.handshake_responder())
       return;
     std::string msg;
@@ -103,7 +106,7 @@ void TestEncryptedSessionDirect() {
   });
 
   EncryptedSession c;
-  c.fd = sv[0];
+  c.set_fd(sv[0]);
   bool client_ok = c.handshake_initiator() &&
                    c.send(std::string("hello encrypted world")) &&
                    c.recv(received_len);
@@ -118,7 +121,10 @@ void TestEncryptedSessionDirect() {
 
 void TestPlainSessionDirect() {
   int sv[2];
-  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) {
+    ++g_fail;
+    return;
+  }
 
   std::string received;
   uint64_t received_len = 0;
@@ -126,7 +132,7 @@ void TestPlainSessionDirect() {
 
   std::thread server_thread([&] {
     PlainSession s;
-    s.fd = sv[1];
+    s.set_fd(sv[1]);
     s.handshake_responder();
     std::string msg;
     if (!s.recv(msg))
@@ -136,7 +142,7 @@ void TestPlainSessionDirect() {
   });
 
   PlainSession c;
-  c.fd = sv[0];
+  c.set_fd(sv[0]);
   bool client_ok = c.handshake_initiator() &&
                    c.send(std::string("hello plain world")) &&
                    c.recv(received_len);
@@ -174,11 +180,14 @@ void TestTypes(const char *label, Client &c, Server &s) {
 
 void TestTypesEncrypted() {
   int sv[2];
-  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) {
+    ++g_fail;
+    return;
+  }
 
   EncryptedSession s, c;
-  s.fd = sv[1];
-  c.fd = sv[0];
+  s.set_fd(sv[1]);
+  c.set_fd(sv[0]);
 
   bool hs_ok = false;
   std::thread t([&] { hs_ok = s.handshake_responder(); });
@@ -220,11 +229,14 @@ void TestTypesEncrypted() {
 
 void TestTypesPlain() {
   int sv[2];
-  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) { ++g_fail; return; }
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) != 0) {
+    ++g_fail;
+    return;
+  }
 
   PlainSession s, c;
-  s.fd = sv[1];
-  c.fd = sv[0];
+  s.set_fd(sv[1]);
+  c.set_fd(sv[0]);
   s.handshake_responder();
   c.handshake_initiator();
 
