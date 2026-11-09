@@ -191,4 +191,4 @@ All messages use a 4-byte little-endian length prefix followed by the serialized
 
 ## License
 
-MIT
+MITT
